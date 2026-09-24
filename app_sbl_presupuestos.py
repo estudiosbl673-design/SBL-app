@@ -121,7 +121,7 @@ def generar_pdf():
     style_cell = ParagraphStyle('Cell', parent=style_normal, fontSize=9, leading=12)
     style_cell_bold = ParagraphStyle('CellB', parent=style_bold, fontSize=9, leading=12)
     style_cell_right = ParagraphStyle('CellR', parent=style_cell, alignment=2)
-    style_cell_right_bold = ParagraphStyle('CellRB', parent=style_cell_bold, alignment=2)
+    style_cell_right_bold = ParagraphStyle('CellRB', parent=style_bold, alignment=2)
     
     story = []
     
@@ -134,7 +134,7 @@ def generar_pdf():
                       "<b>Validez:</b> 15 días", style_right_text)
         ]
     ]
-    t_header = Table(header_data, colWidths=[340, 200])
+    t_header = Table(header_data, colWidths=[330, 210])
     t_header.setStyle(TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP')]))
     story.append(t_header)
     
@@ -166,6 +166,7 @@ def generar_pdf():
         [Paragraph("Descripción del Ítem / Servicio Técnico", th_style), Paragraph("Cant.", th_style_r), Paragraph("P. Unitario", th_style_r), Paragraph("Subtotal", th_style_r)]
     ]
     
+    # Estructura plana (Sin bloques if indentados para evitar errores del servidor)
     if c_bocas > 0:
         items_table_data.append([Paragraph("Mano de obra: Instalación de Bocas Eléctricas Completas", style_cell), Paragraph(str(c_bocas), style_cell_right), Paragraph(f"${P_BOCA:,}", style_cell_right), Paragraph(f"${c_bocas*P_BOCA:,}", style_cell_right)])
     if c_termicas > 0:
@@ -175,7 +176,7 @@ def generar_pdf():
     if c_camaras > 0:
         items_table_data.append([Paragraph("Mano de obra: Instalación, montaje y cableado de Cámaras Analógicas HD", style_cell), Paragraph(str(c_camaras), style_cell_right), Paragraph(f"${P_CAMARA:,}", style_cell_right), Paragraph(f"${c_camaras*P_CAMARA:,}", style_cell_right)])
     if c_dvr > 0:
-        items_table_data.append([Paragraph("Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares en red", style_cell), Paragraph(str(c_dvr), style_cell_right), Paragraph(f"${P_DVR:,}", style_cell_right), Paragraph(f"${c_dvr*P_DVR:,}", style_cell_right)])
+        items_table_data.append([Paragraph("Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares", style_cell), Paragraph(str(c_dvr), style_cell_right), Paragraph(f"${P_DVR:,}", style_cell_right), Paragraph(f"${c_dvr*P_DVR:,}", style_cell_right)])
     if c_mantenimiento > 0:
         items_table_data.append([Paragraph("Servicio Técnico: Mantenimiento correctivo, limpieza de lentes y calibración de Cámaras", style_cell), Paragraph(str(c_mantenimiento), style_cell_right), Paragraph(f"${P_MANTENIMIENTO:,}", style_cell_right), Paragraph(f"${c_mantenimiento*P_MANTENIMIENTO:,}", style_cell_right)])
     if c_metros > 0:
