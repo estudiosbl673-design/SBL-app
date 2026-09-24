@@ -144,10 +144,6 @@ except Exception as e:
     st.info("💡 Modifique las cantidades arriba para actualizar el documento de descarga.")
 
 st.markdown("---")
-
-# ==========================================
-#   ESTRUCTURA DE ENVÍO DIRECTA CORREGIDA
-# ==========================================
 st.header("📲 Panel de Envío por WhatsApp")
 
 telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos, Ej: 543816083885)", "543816083885")
@@ -160,4 +156,7 @@ texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${tot
 texto_url = urllib.parse.quote(texto_wa)
 
 num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-if not num_limpio.startswith("54"):
+
+# CODIGO CORREGIDO LINEAL: Se eliminó la estructura 'if starts_with' que causaba el error de espaciado
+num_final = num_limpio if num_limpio.startswith("54") else "54" + num_limpio
+
