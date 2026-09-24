@@ -22,14 +22,13 @@ def comprobar_contrasenia():
     
     clave = st.text_input("Contraseña de acceso:", type="password")
     if st.button("Iniciar Sesión"):
-        if clave == "SBL2026*":  # <-- AQUÍ CAMBIÁS TU CONTRASEÑA
+        if clave == "SBL2026*":
             st.session_state.autenticado = True
             st.rerun()
         else:
             st.error("❌ Contraseña incorrecta. Intente nuevamente.")
     return False
 
-# Si no está autenticado, detiene la aplicación aquí
 if not comprobar_contrasenia():
     st.stop()
 
@@ -173,8 +172,6 @@ st.download_button(
     mime="application/pdf"
 )
 
-# ... (deja todo lo de arriba del PDF exactamente igual)
-
 texto_wa = f"*⚡ SBL Seguridad Informática*\n" \
            f"Hola {cliente}, te adjuntamos el resumen del *Presupuesto N° {num_presupuesto}*.\n\n" \
            f"💡 Mano de Obra Eléctrica: ${tot_electricidad:,}\n" \
@@ -190,42 +187,8 @@ if telefono_cliente:
     if not num_limpio.startswith("54"):
         num_limpio = "54" + num_limpio
     
-    # LA CORRECCIÓN: Se añadió la barra / después de wa.me
     whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
     
     st.markdown(f'<a href="{whatsapp_url}" target="_top" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
 else:
     st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
-
-
-texto_url = urllib.parse.quote(texto_wa)
-
-if telefono_cliente:
-    num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-    if not num_limpio.startswith("54"):
-        num_limpio = "54" + num_limpio
-    
-    whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
-    
-    st.markdown(f'<a href="{whatsapp_url}" target="_top" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
-else:
-    st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
-
-
-texto_url = urllib.parse.quote(texto_wa)
-
-if telefono_cliente:
-    num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-    if not num_limpio.startswith("54"):
-        num_limpio = "54" + num_limpio
-    
-        # MÉTODO ANTIBLOQUEO ABSOLUTO: Usa target="_top" para romper el bucle de cookies del navegador
-    st.markdown(f'<a href="{whatsapp_url}" target="_top" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
-
-
-    
-    # NUEVO MÉTODO SEGURO: Enlace directo en Markdown que salta los bloqueos del navegador
-    st.markdown(f'<a href="{whatsapp_url}" target="_self" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
-else:
-    st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
-
