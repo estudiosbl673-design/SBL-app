@@ -190,7 +190,9 @@ if telefono_cliente:
     if not num_limpio.startswith("54"):
         num_limpio = "54" + num_limpio
     
-    whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
+        # MÉTODO ANTIBLOQUEO ABSOLUTO: Usa target="_top" para romper el bucle de cookies del navegador
+    st.markdown(f'<a href="{whatsapp_url}" target="_top" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
+
 
     
     # NUEVO MÉTODO SEGURO: Enlace directo en Markdown que salta los bloqueos del navegador
