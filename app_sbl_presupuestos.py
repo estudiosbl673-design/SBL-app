@@ -86,69 +86,105 @@ st.markdown(f"### 🔥 **TOTAL A PRESUPUESTAR: ${total_general:,}**")
 st.markdown("---")
 
 # ==========================================
-#       GENERACIÓN DE INFORME DETALLADO
+#       GENERACIÓN DE PLANTILLA HTML COLOR
 # ==========================================
-plantilla_informe = f"""⚡ SBL SEGURIDAD INFORMÁTICA
-=========================================
-PRESUPUESTO OFICIAL N° {num_presupuesto}
-Fecha de Emisión: {fecha.strftime('%d/%m/%Y')}
-Validez del Presupuesto: 15 días
-=========================================
+html_documento = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    body {{ font-family: 'Segoe UI', Helvetica, Arial, sans-serif; color: #2c3e50; margin: 20px; }}
+    .header-table {{ width: 100%; border-collapse: collapse; margin-bottom: 20px; }}
+    .logo-title {{ font-size: 24px; font-weight: bold; color: #1a365d; }}
+    .doc-type {{ text-align: right; font-size: 14px; color: #4a5568; line-height: 1.5; }}
+    .divider {{ border-top: 3px solid #1a365d; margin-bottom: 20px; }}
+    .info-table {{ width: 100%; border-collapse: collapse; margin-bottom: 25px; }}
+    .info-header {{ background-color: #2d3748; color: white; font-weight: bold; font-size: 13px; padding: 8px; }}
+    .info-cell {{ padding: 10px; border: 1px solid #e2e8f0; background-color: #f7fafc; font-size: 13px; vertical-align: top; width: 50%; }}
+    .section-title {{ font-size: 14px; font-weight: bold; color: #1a365d; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; }}
+    .items-table {{ width: 100%; border-collapse: collapse; }}
+    .items-th {{ background-color: #1a365d; color: white; font-weight: bold; font-size: 13px; padding: 10px; text-align: left; }}
+    .items-th-r {{ background-color: #1a365d; color: white; font-weight: bold; font-size: 13px; padding: 10px; text-align: right; }}
+    .items-td {{ padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }}
+    .items-td-r {{ padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-align: right; }}
+    .row-even {{ background-color: #f7fafc; }}
+    .total-row {{ background-color: #edf2f7; font-weight: bold; font-size: 14px; color: #1a365d; }}
+    .total-td {{ padding: 12px; border-top: 2px solid #1a365d; border-bottom: 2px solid #1a365d; }}
+    .total-td-r {{ padding: 12px; border-top: 2px solid #1a365d; border-bottom: 2px solid #1a365d; text-align: right; }}
+    .terms {{ font-size: 13px; line-height: 1.6; background-color: #f7fafc; padding: 15px; border-radius: 5px; border-left: 4px solid #1a365d; }}
+    .footer-table {{ width: 100%; margin-top: 50px; }}
+    .signature {{ text-align: right; font-size: 13px; font-weight: bold; color: #2d3748; line-height: 1.5; }}
+</style>
+</head>
+<body>
 
-👤 DATOS DEL CLIENTE / OBRA:
------------------------------------------
-Cliente: {cliente}
-Ubicación de la Obra: {domicilio}
-Estado: Pendiente de Aprobación
+<table class="header-table">
+    <tr>
+        <td class="logo-title">⚡ SBL SEGURIDAD INFORMÁTICA<br/><span style="font-size: 12px; color: #4a5568; font-weight: normal;">Soluciones Tecnológicas e Integrales</span></td>
+        <td class="doc-type">
+            <span style="font-size: 18px; font-weight: bold; color: #1a365d;">PRESUPUESTO OFICIAL</span><br/>
+            <b>N°:</b> {num_presupuesto}<br/>
+            <b>Fecha:</b> {fecha.strftime('%d/%m/%Y')}<br/>
+            <b>Validez:</b> 15 días
+        </td>
+    </tr>
+</table>
 
-🛠️ DESGLOSE DETALLADO DE CONCEPTOS:
------------------------------------------"""
+<div class="divider"></div>
 
-if c_bocas > 0: plantilla_informe += f"\n• Inst. Bocas Eléctricas Completas ({c_bocas} u.): ${c_bocas*P_BOCA:,}"
-if c_termicas > 0: plantilla_informe += f"\n• Montaje Térmicas/Disyuntores ({c_termicas} u.): ${c_termicas*P_TERMICA:,}"
-if c_aires > 0: plantilla_informe += f"\n• Líneas exclusivas para A/A ({c_aires} u.): ${c_aires*P_AIRE:,}"
-if c_camaras > 0: plantilla_informe += f"\n• Inst. Cámaras Analógicas HD ({c_camaras} u.): ${c_camaras*P_CAMARA:,}"
-if c_dvr > 0: plantilla_informe += f"\n• Configuración DVR y enlace celular ({c_dvr} u.): ${c_dvr*P_DVR:,}"
-if c_mantenimiento > 0: plantilla_informe += f"\n• Mantenimiento correctivo y limpieza ({c_mantenimiento} u.): ${c_mantenimiento*P_MANTENIMIENTO:,}"
-if c_metros > 0: plantilla_informe += f"\n• Cableado estructurado excedente CCTV ({c_metros} m.): ${c_metros*P_METRO:,}"
-if incluye_materiales: plantilla_informe += f"\n• Kit 4 Cámaras HD + Disco Rígido 1TB (1 u.): ${P_KIT:,}"
-if otros_materiales > 0: plantilla_informe += f"\n• Componentes o accesorios adicionales: ${otros_materiales:,}"
+<table class="info-table">
+    <tr>
+        <td class="info-header">PROVEEDOR:</td>
+        <td class="info-header">CLIENTE / OBRA:</td>
+    </tr>
+    <tr>
+        <td class="info-cell">
+            <b>SBL Seguridad Informática</b><br/>
+            San Miguel de Tucumán<br/>
+            Email: info@sblseguridad.com
+        </td>
+        <td class="info-cell">
+            <b>Nombre:</b> {cliente}<br/>
+            <b>Ubicación:</b> {domicilio}<br/>
+            <b>Estado:</b> Pendiente de Aprobación
+        </td>
+    </tr>
+</table>
 
-plantilla_informe += f"""\n-----------------------------------------
-🔥 VALOR TOTAL CONTADO NETO: ${total_general:,}
------------------------------------------
+<div class="section-title">DESGLOSE DETALLADO DE CONCEPTOS</div>
 
-📝 TÉRMINOS Y CONDICIONES COMERCIALES:
------------------------------------------
-• Forma de Pago: {condicion_pago}.
-• Garantía: Equipamiento con 1 año de garantía de fábrica. Mano de obra por 90 días.
-• Transferencia Bancaria: Cuenta Corriente SBL | CBU/Alias: {cbu_alias}
+<table class="items-table">
+    <tr>
+        <th class="items-th">Descripción del Ítem / Servicio Técnico</th>
+        <th class="items-th-r">Cant.</th>
+        <th class="items-th-r">P. Unitario</th>
+        <th class="items-th-r">Subtotal</th>
+    </tr>
+"""
 
-Muchas gracias por elegir SBL Seguridad Informática."""
-
-# Botón Nativo para Descargar la Propuesta Estructurada
-st.download_button(
-    label="📥 Descargar Documento Comercial",
-    data=plantilla_informe,
-    file_name=f"Presupuesto_{num_presupuesto}_{cliente.replace(' ', '_')}.txt",
-    mime="text/plain",
-    use_container_width=True
-)
-
-# Mensaje para WhatsApp optimizado
-texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
-if tot_electricidad > 0: texto_wa += f"💡 *Mano de obra Eléctrica:* ${tot_electricidad:,}\n"
-if tot_seguridad > 0: texto_wa += f"🛡️ *Mano de obra Seguridad y Manto.:* ${tot_seguridad:,}\n"
-if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
-
-texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n📝 *Términos Comerciales:*\n• Pago: {condicion_pago}.\n• Garantía: Equipos 1 año, Mano de obra 90 días.\n🏦 *Datos de Transferencia:* \n• CBU/Alias: {cbu_alias}\n\n¡Muchas gracias por elegirnos!"
-texto_url = urllib.parse.quote(texto_wa)
-
-if telefono_cliente:
-    num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-    if not num_limpio.startswith("54"): num_limpio = "54" + num_limpio
-    whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
-    st.success("✅ ¡Propuesta comercial generada de forma exitosa!")
-    st.markdown(f"👉 **[HACÉ CLIC AQUÍ PARA ENVIAR POR WHATSAPP]({whatsapp_url})**")
-else:
-    st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el envío directo por WhatsApp.")
+linea_index = 1
+if c_bocas > 0:
+    clase_fila = "row-even" if linea_index % 2 == 0 else ""
+    html_documento += f'<tr class="{clase_fila}"><td class="items-td">Mano de obra: Instalación de Bocas Eléctricas Completas</td><td class="items-td-r">{c_bocas}</td><td class="items-td-r">${P_BOCA:,}</td><td class="items-td-r">${c_bocas*P_BOCA:,}</td></tr>'
+    linea_index += 1
+if c_termicas > 0:
+    clase_fila = "row-even" if linea_index % 2 == 0 else ""
+    html_documento += f'<tr class="{clase_fila}"><td class="items-td">Mano de obra: Montaje y conexión de Térmicas/Disyuntores</td><td class="items-td-r">{c_termicas}</td><td class="items-td-r">${P_TERMICA:,}</td><td class="items-td-r">${c_termicas*P_TERMICA:,}</td></tr>'
+    linea_index += 1
+if c_aires > 0:
+    clase_fila = "row-even" if linea_index % 2 == 0 else ""
+    html_documento += f'<tr class="{clase_fila}"><td class="items-td">Mano de obra: Tendido de líneas exclusivas para Aire Acondicionado</td><td class="items-td-r">{c_aires}</td><td class="items-td-r">${P_AIRE:,}</td><td class="items-td-r">${c_aires*P_AIRE:,}</td></tr>'
+    linea_index += 1
+if c_camaras > 0:
+    clase_fila = "row-even" if linea_index % 2 == 0 else ""
+    html_documento += f'<tr class="{clase_fila}"><td class="items-td">Mano de obra: Instalación, montaje y cableado de Cámaras Analógicas HD</td><td class="items-td-r">{c_camaras}</td><td class="items-td-r">${P_CAMARA:,}</td><td class="items-td-r">${c_camaras*P_CAMARA:,}</td></tr>'
+    linea_index += 1
+if c_dvr > 0:
+    clase_fila = "row-even" if linea_index % 2 == 0 else ""
+    html_documento += f'<tr class="{clase_fila}"><td class="items-td">Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares en red</td><td class="items-td-r">{c_dvr}</td><td class="items-td-r">${P_DVR:,}</td><td class="items-td-r">${c_dvr*P_DVR:,}</td></tr>'
+    linea_index += 1
+if c_mantenimiento > 0:
+    clase_fila = "row-even" if linea_index % 2 == 0 else ""
+    html_documento += f'<tr class="{clase_fila}"><td class="items-td">Servicio Técnico: Mantenimiento correctivo, limpieza de lentes y calibración de Cámaras</td><td class="items-td-r">{c_mantenimiento}</td><td class="items-td-r">${P_MANTENIMIENTO:,}</td><td class="items-td-r">${c_mantenimiento*P_MANTENIMIENTO:,}</td></tr>'
+    linea_index += 1
+if c_metros > 0:
