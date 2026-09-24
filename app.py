@@ -129,7 +129,7 @@ def generar_pdf_desglosado():
     buffer.seek(0)
     return buffer.getvalue()
 
-st.subheader("📥 Generación de Documento")
+st.header("📝 Generación de Documento")
 
 try:
     archivo_pdf = generar_pdf_desglosado()
@@ -144,8 +144,9 @@ except Exception as e:
     st.info("💡 Modifique las cantidades arriba para actualizar el documento de descarga.")
 
 st.markdown("---")
-st.subheader("📲 Panel de Envío por WhatsApp")
+st.header("📲 Panel de Envío por WhatsApp")
 
+# Esta sección respeta exactamente la visual de tu captura exitosa
 telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos, Ej: 543816083885)", "543816083885")
 
 texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
@@ -159,5 +160,3 @@ num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "")
 if not num_limpio.startswith("54"):
     num_limpio = "54" + num_limpio
     
-whatsapp_url = f"https://wa.me/{num_limpio}?text={texto_url}"
-
