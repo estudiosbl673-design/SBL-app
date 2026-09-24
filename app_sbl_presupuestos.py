@@ -183,14 +183,20 @@ texto_wa = f"*⚡ SBL Seguridad Informática*\n" \
 texto_url = urllib.parse.quote(texto_wa)
 
 if telefono_cliente:
+    if telefono_cliente:
     num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
     if not num_limpio.startswith("54"):
         num_limpio = "54" + num_limpio
     
-        # ENLACE SEGURO COMPATIBLE CON WHATSAPP
-    whatsapp_url = f"https://whatsapp.com{num_limpio}&text={texto_url}"
+    # Enlace directo simplificado wa.me
+    whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
     
-    # BOTÓN NATIVO OFICIAL (Imposible de bloquear por el navegador)
-    st.link_button("💬 Enviar Resumen por WhatsApp", whatsapp_url, use_container_width=True)
+    # INTERFAZ SÚPER COMPATIBLE: Cuadro con enlace directo para hacer clic
+    st.success("✅ ¡Enlace de WhatsApp generado con éxito!")
+    st.markdown(f"👉 **[HACÉ CLIC AQUÍ PARA ENVIAR EL PRESUPUESTO]({whatsapp_url})**")
+    st.info("💡 Si el navegador te frena la apertura, también podés copiar y pegar este enlace directo en otra pestaña:\n\n" f"`{whatsapp_url}`")
+else:
+    st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el envío directo por WhatsApp.")
+
 else:
     st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
