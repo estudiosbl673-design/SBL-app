@@ -76,7 +76,7 @@ st.write(f"**Total Materiales y Equipos:** ${tot_materiales:,}")
 st.markdown(f"### 🔥 **TOTAL A PRESUPUESTAR: ${total_general:,}**")
 st.markdown("---")
 
-# Armado del documento HTML a color
+# Construcción del documento HTML a color corporativo
 tabla_html_filas = ""
 if c_bocas > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Instalación de Bocas Eléctricas Completas</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_bocas) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_BOCA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_bocas*P_BOCA:,}" + "</td></tr>"
 if c_termicas > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Montaje y conexión de Térmicas/Disyuntores</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_termicas) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_TERMICA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_termicas*P_TERMICA:,}" + "</td></tr>"
