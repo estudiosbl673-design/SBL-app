@@ -5,6 +5,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
 
 st.set_page_config(page_title="SBL Presupuestos Premium", page_icon="⚡", layout="centered")
 
@@ -97,14 +98,14 @@ def generar_pdf():
     
     story = []
     header_data = [[Paragraph("<b>⚡ SBL SEGURIDAD INFORMÁTICA</b><br/><font size=9 color='#4A5568'>Soluciones Tecnológicas e Integrales</font>", style_title), Paragraph("<b>PRESUPUESTO OFICIAL</b><br/>"f"<b>N°:</b> {num_presupuesto}<br/>"f"<b>Fecha:</b> {fecha.strftime('%d/%m/%Y')}<br/>""<b>Validez:</b> 15 días", style_right_text)]]
-    t_header = Table(header_data, colWidths=)
+    t_header = Table(header_data, colWidths=[4.5 * inch, 3.0 * inch])
     t_header.setStyle(TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP')]))
     story.append(t_header)
     story.append(Spacer(1, 10))
     story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#1A365D'), spaceAfter=15))
     
     info_data = [[Paragraph("<b>PROVEEDOR:</b>", style_cell_bold), Paragraph("<b>CLIENTE / OBRA:</b>", style_cell_bold)], [Paragraph("SBL Seguridad Informática<br/>San Miguel de Tucumán<br/>Email: info@sblseguridad.com", style_cell), Paragraph(f"<b>Nombre:</b> {cliente}<br/><b>Ubicación:</b> {domicilio}<br/><b>Estado:</b> Pendiente de Aprobación", style_cell)]]
-    t_info = Table(info_data, colWidths=)
+    t_info = Table(info_data, colWidths=[3.75 * inch, 3.75 * inch])
     t_info.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2D3748')), ('PADDING', (0,0), (-1,-1), 6), ('BACKGROUND', (0,1), (-1,1), colors.HexColor('#F7FAFC')), ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')), ('VALIGN', (0,0), (-1,-1), 'TOP')]))
     story.append(t_info)
     story.append(Spacer(1, 15))
@@ -135,6 +136,4 @@ def generar_pdf():
         
     items_table_data.append([Paragraph("<b>VALOR TOTAL DEL PRESUPUESTO CONTADO</b>", style_cell_bold), Paragraph(""), Paragraph(""), Paragraph(f"<b>${total_general:,}</b>", style_cell_right_bold)])
     
-    t_items = Table(items_table_data, colWidths=)
-    t_style = [('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1A365D')), ('PADDING', (0,0), (-1,-1), 6), ('VALIGN', (0,0), (-1,-1), 'MIDDLE'), ('GRID', (0,0), (-1,-2), 0.5, colors.HexColor('#E2E8F0')), ('LINEABOVE', (0,-1), (-1,-1), 1.5, colors.HexColor('#1A365D')), ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#EDF2F7'))]
-    for i in range(1, len(items_table_data) - 1):
+    t_items = Table(items_table_data, colWidths=[4.25 * inch, 0.75 * inch, 1.25 * inch, 1.25 * inch])
