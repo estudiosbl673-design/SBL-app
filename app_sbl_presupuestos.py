@@ -4,6 +4,9 @@ import urllib.parse
 
 st.set_page_config(page_title="SBL Presupuestos Premium", page_icon="⚡", layout="centered")
 
+# ==========================================
+#       SISTEMA DE SEGURIDAD PRIVADO
+# ==========================================
 def comprobar_contrasenia():
     if "autenticado" not in st.session_state:
         st.session_state.autenticado = False
@@ -22,12 +25,17 @@ def comprobar_contrasenia():
 if not comprobar_contrasenia():
     st.stop()
 
+# ==========================================
+#       CÓDIGO DE LA APLICACIÓN (SBL)
+# ==========================================
 st.title("⚡ SBL Seguridad Informática")
 st.subheader("Generador de Presupuestos Premium")
 
 st.sidebar.header("⚙️ Configuración")
 num_presupuesto = st.sidebar.text_input("N° de Presupuesto", "0001-0026")
 fecha = st.sidebar.date_input("Fecha de Emisión", datetime.date.today())
+cbu_alias = st.sidebar.text_input("CBU / Alias Bancario", "SBL.SEGURIDAD.TUC")
+condicion_pago = st.sidebar.selectbox("Condición de Pago", ["Contado / Transferencia", "50% Anticipo - 50% Saldo", "A Convenir"])
 
 st.header("👤 Datos del Cliente")
 col1, col2 = st.columns(2)
@@ -52,15 +60,6 @@ st.subheader("📦 3. Materiales y Equipos")
 incluye_materiales = st.checkbox("¿Incluir Kit de 4 Cámaras HD + Disco 1TB ($368.000)?", value=True)
 otros_materiales = st.number_input("Otros materiales / Adicionales (Pesos $)", min_value=0, value=0)
 
-st.sidebar.markdown("---")
-st.sidebar.header("🏦 Datos de Cobro")
-cbu_alias = st.sidebar.text_input("CBU / Alias Bancario", "SBL.SEGURIDAD.TUC")
-condicion_pago = st.sidebar.selectbox("Condición de Pago", ["Contado / Transferencia", "50% Anticipo - 50% Saldo", "A Convenir"])
-
-st.sidebar.markdown("---")
-st.sidebar.header("📲 Enviar por WhatsApp")
-telefono_cliente = st.sidebar.text_input("Celular del Cliente (Ej: 3816083885)", "")
-
 P_BOCA, P_TERMICA, P_AIRE = 45000, 32000, 60000
 P_CAMARA, P_DVR, P_MANTENIMIENTO, P_METRO, P_KIT = 35000, 40000, 15000, 2000, 368000
 
@@ -77,7 +76,7 @@ st.write(f"**Total Materiales y Equipos:** ${tot_materiales:,}")
 st.markdown(f"### 🔥 **TOTAL A PRESUPUESTAR: ${total_general:,}**")
 st.markdown("---")
 
-# Construcción de las filas dinámicas en HTML
+# Armado del documento HTML a color
 tabla_html_filas = ""
 if c_bocas > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Instalación de Bocas Eléctricas Completas</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_bocas) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_BOCA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_bocas*P_BOCA:,}" + "</td></tr>"
 if c_termicas > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Montaje y conexión de Térmicas/Disyuntores</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_termicas) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_TERMICA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_termicas*P_TERMICA:,}" + "</td></tr>"
@@ -89,4 +88,3 @@ if c_metros > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:
 if incluye_materiales: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>1</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_KIT:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_KIT:,}" + "</td></tr>"
 if otros_materiales > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Materiales: Componentes adicionales o accesorios de montaje</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>1</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{otros_materiales:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{otros_materiales:,}" + "</td></tr>"
 
-# Armado del documento en bloques planos (Inmune a fallas de traducción)
