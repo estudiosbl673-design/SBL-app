@@ -145,6 +145,6 @@ texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${tot
 texto_url = urllib.parse.quote(texto_wa)
 
 num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
+whatsapp_url = f"https://wa.me/{num_limpio}?text={texto_url}"
 
 st.markdown(f"👉 **[HACÉ CLIC AQUÍ PARA ENVIAR EL RESUMEN POR WHATSAPP]({whatsapp_url})**")
