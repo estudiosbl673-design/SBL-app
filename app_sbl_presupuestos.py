@@ -77,47 +77,16 @@ st.write(f"**Total Materiales y Equipos:** ${tot_materiales:,}")
 st.markdown(f"### 🔥 **TOTAL A PRESUPUESTAR: ${total_general:,}**")
 st.markdown("---")
 
-# Estructura de tabla armada en bloques fijos de texto (A prueba de errores de traducción)
+# Construcción de las filas dinámicas en HTML
 tabla_html_filas = ""
-if c_bocas > 0: tabla_html_filas += f'<tr><td class="items-td">Mano de obra: Instalación de Bocas Eléctricas Completas</td><td class="items-td-r">{c_bocas}</td><td class="items-td-r">${P_BOCA:,}</td><td class="items-td-r">${c_bocas*P_BOCA:,}</td></tr>'
-if c_termicas > 0: tabla_html_filas += f'<tr><td class="items-td">Mano de obra: Montaje y conexión de Térmicas/Disyuntores</td><td class="items-td-r">{c_termicas}</td><td class="items-td-r">${P_TERMICA:,}</td><td class="items-td-r">${c_termicas*P_TERMICA:,}</td></tr>'
-if c_aires > 0: tabla_html_filas += f'<tr><td class="items-td">Mano de obra: Tendido de líneas para Aire Acondicionado</td><td class="items-td-r">{c_aires}</td><td class="items-td-r">${P_AIRE:,}</td><td class="items-td-r">${c_aires*P_AIRE:,}</td></tr>'
-if c_camaras > 0: tabla_html_filas += f'<tr><td class="items-td">Mano de obra: Instalación y cableado de Cámaras Analógicas HD</td><td class="items-td-r">{c_camaras}</td><td class="items-td-r">${P_CAMARA:,}</td><td class="items-td-r">${c_camaras*P_CAMARA:,}</td></tr>'
-if c_dvr > 0: tabla_html_filas += f'<tr><td class="items-td">Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares</td><td class="items-td-r">{c_dvr}</td><td class="items-td-r">${P_DVR:,}</td><td class="items-td-r">${c_dvr*P_DVR:,}</td></tr>'
-if c_mantenimiento > 0: tabla_html_filas += f'<tr><td class="items-td">Servicio Técnico: Mantenimiento y limpieza de Cámaras</td><td class="items-td-r">{c_mantenimiento}</td><td class="items-td-r">${P_MANTENIMIENTO:,}</td><td class="items-td-r">${c_mantenimiento*P_MANTENIMIENTO:,}</td></tr>'
-if c_metros > 0: tabla_html_filas += f'<tr><td class="items-td">Materiales: Metros de cableado excedente CCTV</td><td class="items-td-r">{c_metros}</td><td class="items-td-r">${P_METRO:,}</td><td class="items-td-r">${c_metros*P_METRO:,}</td></tr>'
-if incluye_materiales: tabla_html_filas += f'<tr><td class="items-td">Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB</td><td class="items-td-r">1</td><td class="items-td-r">${P_KIT:,}</td><td class="items-td-r">${P_KIT:,}</td></tr>'
-if otros_materiales > 0: tabla_html_filas += f'<tr><td class="items-td">Materiales: Componentes adicionales o accesorios de montaje</td><td class="items-td-r">1</td><td class="items-td-r">${otros_materiales:,}</td><td class="items-td-r">${otros_materiales:,}</td></tr>'
+if c_bocas > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Instalación de Bocas Eléctricas Completas</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_bocas) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_BOCA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_bocas*P_BOCA:,}" + "</td></tr>"
+if c_termicas > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Montaje y conexión de Térmicas/Disyuntores</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_termicas) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_TERMICA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_termicas*P_TERMICA:,}" + "</td></tr>"
+if c_aires > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Tendido de líneas para Aire Acondicionado</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_aires) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_AIRE:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_aires*P_AIRE:,}" + "</td></tr>"
+if c_camaras > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Mano de obra: Instalación y cableado de Cámaras Analógicas HD</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_camaras) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_CAMARA:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_camaras*P_CAMARA:,}" + "</td></tr>"
+if c_dvr > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_dvr) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_DVR:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_dvr*P_DVR:,}" + "</td></tr>"
+if c_mantenimiento > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Servicio Técnico: Mantenimiento y limpieza de Cámaras</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_mantenimiento) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_MANTENIMIENTO:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_mantenimiento*P_MANTENIMIENTO:,}" + "</td></tr>"
+if c_metros > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Materiales: Metros de cableado excedente CCTV</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>" + str(c_metros) + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_METRO:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{c_metros*P_METRO:,}" + "</td></tr>"
+if incluye_materiales: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>1</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_KIT:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{P_KIT:,}" + "</td></tr>"
+if otros_materiales > 0: tabla_html_filas += "<tr><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;'>Materiales: Componentes adicionales o accesorios de montaje</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>1</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{otros_materiales:,}" + "</td><td style='padding:10px;border-bottom:1px solid #e2e8f0;font-size:12px;text-align:right;'>$" + f"{otros_materiales:,}" + "</td></tr>"
 
-html_documento = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
-<style>
-    body {{ font-family: 'Segoe UI', Arial, sans-serif; color: #2c3e50; margin: 20px; }}
-    .header-table {{ width: 100%; border-collapse: collapse; margin-bottom: 20px; }}
-    .logo-title {{ font-size: 24px; font-weight: bold; color: #1a365d; }}
-    .doc-type {{ text-align: right; font-size: 14px; color: #4a5568; line-height: 1.5; }}
-    .divider {{ border-top: 3px solid #1a365d; margin-bottom: 20px; }}
-    .info-table {{ width: 100%; border-collapse: collapse; margin-bottom: 25px; }}
-    .info-header {{ background-color: #2d3748; color: white; font-weight: bold; font-size: 13px; padding: 8px; }}
-    .info-cell {{ padding: 10px; border: 1px solid #e2e8f0; background-color: #f7fafc; font-size: 13px; vertical-align: top; width: 50%; }}
-    .section-title {{ font-size: 14px; font-weight: bold; color: #1a365d; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-top: 25px; margin-bottom: 15px; }}
-    .items-table {{ width: 100%; border-collapse: collapse; }}
-    .items-th {{ background-color: #1a365d; color: white; font-weight: bold; font-size: 13px; padding: 10px; text-align: left; }}
-    .items-th-r {{ background-color: #1a365d; color: white; font-weight: bold; font-size: 13px; padding: 10px; text-align: right; }}
-    .items-td {{ padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 12px; }}
-    .items-td-r {{ padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 12px; text-align: right; }}
-    .total-row {{ background-color: #edf2f7; font-weight: bold; font-size: 14px; color: #1a365d; }}
-    .total-td {{ padding: 12px; border-top: 2px solid #1a365d; border-bottom: 2px solid #1a365d; }}
-    .total-td-r {{ padding: 12px; border-top: 2px solid #1a365d; border-bottom: 2px solid #1a365d; text-align: right; }}
-    .terms {{ font-size: 13px; line-height: 1.6; background-color: #f7fafc; padding: 15px; border-radius: 5px; border-left: 4px solid #1a365d; }}
-    .footer-table {{ width: 100%; margin-top: 50px; }}
-    .signature {{ text-align: right; font-size: 13px; font-weight: bold; color: #2d3748; }}
-</style></head><body>
-<table class="header-table"><tr><td class="logo-title">⚡ SBL SEGURIDAD INFORMÁTICA<br/><span style="font-size: 12px; color: #4a5568; font-weight: normal;">Soluciones Tecnológicas e Integrales</span></td><td class="doc-type"><span style="font-size: 18px; font-weight: bold; color: #1a365d;">PRESUPUESTO OFICIAL</span><br/><b>N°:</b> {num_presupuesto}<br/><b>Fecha:</b> {fecha.strftime('%d/%m/%Y')}<br/><b>Validez:</b> 15 días</td></tr></table>
-<div class="divider"></div>
-<table class="info-table"><tr><td class="info-header">PROVEEDOR:</td><td class="info-header">CLIENTE / OBRA:</td></tr><tr><td class="info-cell"><b>SBL Seguridad Informática</b><br/>San Miguel de Tucumán<br/>Email: info@sblseguridad.com</td><td class="info-cell"><b>Nombre:</b> {cliente}<br/><b>Ubicación:</b> {domicilio}<br/><b>Estado:</b> Pendiente de Aprobación</td></tr></table>
-<div class="section-title">DESGLOSE DETALLADO DE CONCEPTOS</div>
-<table class="items-table"><tr><th class="items-th">Descripción del Ítem / Servicio Técnico</th><th class="items-th-r">Cant.</th><th class="items-th-r">P. Unitario</th><th class="items-th-r">Subtotal</th></tr>
-{tabla_html_filas}
-<tr class="total-row"><td class="total-td">VALOR TOTAL DEL PRESUPUESTO CONTADO</td><td class="total-td-r"></td><td class="total-td-r"></td><td class="total-td-r">${total_general:,}</td></tr></table>
-<div class="section-title">TÉRMINOS Y CONDICIONES COMERCIALES</div>
-<div class="terms">• <b>Forma de Pago:</b> {condicion_pago}.<br/>• <b>Garantía:</b> Equipamiento con 1 año de garantía oficial de fábrica. Mano de obra por 90 días.<br/>• <b>Transferencia Bancaria:</b> Cuenta Corriente SBL | <b>CBU/Alias:</b> {cbu_alias}</div>
+# Armado del documento en bloques planos (Inmune a fallas de traducción)
