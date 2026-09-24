@@ -45,13 +45,11 @@ with col2:
 
 st.header("🛠️ Desglose del Trabajo Técnico")
 
-# Categoría 1: Electricidad Desglosada
 st.subheader("💡 1. Trabajos de Instalación Eléctrica")
 c_bocas = st.number_input("Cantidad de Bocas Completas ($45.000 c/u)", min_value=0, value=0)
 c_tomas = st.number_input("Colocación de Tomas / Módulos ($15.000 c/u)", min_value=0, value=0)
 c_termicas = st.number_input("Colocación de Térmicas / Disyuntores ($32.000 c/u)", min_value=0, value=0)
 
-# Categoría 2: Seguridad y CCTV Desglosado
 st.subheader("🛡️ 2. Trabajos de Seguridad y CCTV")
 c_camaras = st.number_input("Montaje de Cámaras ($35.000 c/u)", min_value=0, value=4)
 c_cableado = st.number_input("Tendido de Cableado de Cámaras ($12.000 c/u)", min_value=0, value=4)
@@ -59,27 +57,13 @@ c_caneria = st.number_input("Instalación de Cañerías / Conducción ($18.000 c
 c_dvr = st.number_input("Configuración de DVR / NVR + Enlace Celular ($40.000 c/u)", min_value=0, value=1)
 c_mantenimiento = st.number_input("Mantenimiento Técnico / Limpieza General ($15.000 c/u)", min_value=0, value=0)
 
-# Categoría 3: Materiales
 st.subheader("📦 3. Materiales y Equipos")
 incluye_materiales = st.checkbox("¿Incluir Kit de 4 Cámaras HD + Disco 1TB ($368.000)?", value=True)
 otros_materiales = st.number_input("Otros materiales / Equipos Adicionales (Pesos $)", min_value=0, value=0)
 
-st.sidebar.markdown("---")
-st.sidebar.header("📲 Enviar por WhatsApp")
-telefono_cliente = st.sidebar.text_input("Celular del Cliente (Ej: 543816083885)", "543816083885")
+P_BOCA, P_TOMA, P_TERMICA = 45000, 15000, 32000
+P_CAMARA, P_CABLEADO, P_CANERIA, P_DVR, P_MANTENIMIENTO, P_KIT = 35000, 12000, 18000, 40000, 15000, 368000
 
-# Precios Unitarios Oficiales de SBL
-P_BOCA = 45000
-P_TOMA = 15000
-P_TERMICA = 32000
-P_CAMARA = 35000
-P_CABLEADO = 12000
-P_CANERIA = 18000
-P_DVR = 40000
-P_MANTENIMIENTO = 15000
-P_KIT = 368000
-
-# Cálculos de Totales parciales
 tot_mano_obra = (c_bocas * P_BOCA) + (c_tomas * P_TOMA) + (c_termicas * P_TERMICA) + \
                  (c_camaras * P_CAMARA) + (c_cableado * P_CABLEADO) + (c_caneria * P_CANERIA) + \
                  (c_dvr * P_DVR) + (c_mantenimiento * P_MANTENIMIENTO)
@@ -162,11 +146,17 @@ except Exception as e:
 st.markdown("---")
 st.subheader("📲 Panel de Envío por WhatsApp")
 
-# Variable unificada lineal (Inmune a fallas de sangría o corte)
+# CASILLA DE TELÉFONO MOVIDA AL CENTRO DE LA PANTALLA PRINCIPAL ABAJO DEL PDF
+telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos con código de área, Ej: 543816083885)", "543816083885")
+
 texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
 if tot_mano_obra > 0: texto_wa += f"💡 *Mano de obra:* ${tot_mano_obra:,}\n"
 if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
 texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n⏳ *Validez del presupuesto:* 10 días.\n🛡️ *Garantía:* Cobertura de 90 días exclusiva para la mano de obra. La garantía por materiales o dispositivos electrónicos rige según el fabricante.\n\n¡Muchas gracias por elegirnos!"
 
 texto_url = urllib.parse.quote(texto_wa)
+
+num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
+if not num_limpio.startswith("54"):
+    num_limpio = "54" + num_limpio
 
