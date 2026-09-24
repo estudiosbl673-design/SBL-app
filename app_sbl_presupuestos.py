@@ -115,7 +115,7 @@ def generar_pdf_desglosado():
     tabla_data.append([Paragraph("<b>TOTAL A PRESUPUESTAR</b>", style_n), Paragraph(""), Paragraph(f"<b>${total_general:,}</b>", style_r)])
     
     t_d = Table(tabla_data, colWidths=[4.5 * inch, 1.0 * inch, 2.0 * inch])
-    t_d.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E3D59')), ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke), ('PADDING', (0,0), (-1,-1), 10), ('GRID', (0,0), (-1,-2), 0.5, colors.lightgrey), ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#E8F1F5'))]))
+    t_d.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E3D59')), ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke), ('PADDING', (0,0), (-1,-1), 8), ('GRID', (0,0), (-1,-2), 0.5, colors.lightgrey), ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#E8F1F5'))]))
     story.append(t_d)
     story.append(Spacer(1, 20))
     
@@ -134,7 +134,7 @@ st.subheader("📥 Generación de Documento")
 try:
     archivo_pdf = generar_pdf_desglosado()
     st.download_button(
-        label="📥 Descargar PDF Detallado Real",
+        label="📥 Descargar Documento de Presupuesto Formal",
         data=archivo_pdf,
         file_name=f"Presupuesto_{num_presupuesto}_{cliente.replace(' ', '_')}.pdf",
         mime="application/pdf",
@@ -161,3 +161,4 @@ if not num_limpio.startswith("54"):
 
 whatsapp_url = f"https://wa.me/{num_limpio}?text={texto_url}"
 
+# ENLACE AZUL SUBRAYADO EXACTO COMO EN TU CAPTURA
