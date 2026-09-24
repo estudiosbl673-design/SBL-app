@@ -134,7 +134,7 @@ st.subheader("📥 Generación de Documento")
 try:
     archivo_pdf = generar_pdf_desglosado()
     st.download_button(
-        label="📥 Descargar Documento de Presupuesto Formal",
+        label="📥 Descargar Documento de Presupuesto Formal (PDF)",
         data=archivo_pdf,
         file_name=f"Presupuesto_{num_presupuesto}_{cliente.replace(' ', '_')}.pdf",
         mime="application/pdf",
@@ -146,18 +146,14 @@ except Exception as e:
 st.markdown("---")
 st.subheader("📲 Panel de Envío por WhatsApp")
 
-telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos con código de área, Ej: 543816083885)", "543816083885")
+# Casilla de texto estándar
+telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos, Ej: 543816083885)", "543816083885")
 
-texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
-if tot_mano_obra > 0: texto_wa += f"💡 *Mano de obra:* ${tot_mano_obra:,}\n"
-if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
-texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n⏳ *Validez del presupuesto:* 10 días.\n🛡️ *Garantía:* Cobertura de 90 días exclusiva para la mano de obra. La garantía por materiales o dispositivos electrónicos rige según el fabricante.\n\n¡Muchas gracias por elegirnos!"
-
-texto_url = urllib.parse.quote(texto_wa)
-
-num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-if not num_limpio.startswith("54"):
-    num_limpio = "54" + num_limpio
-
-whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
-
+# BOTÓN DE COMANDO NATIVO ESTÁNDAR (Ningún AdBlock ni Chrome lo puede borrar o bloquear)
+if st.button("💬 ENVIAR PRESUPUESTO POR WHATSAPP NOW", use_container_width=True):
+    texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
+    if tot_mano_obra > 0: texto_wa += f"💡 *Mano de obra:* ${tot_mano_obra:,}\n"
+    if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
+    texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n⏳ *Validez del presupuesto:* 10 días.\n🛡️ *Garantía:* Cobertura de 90 días exclusiva para la mano de obra. La garantía por materiales o dispositivos electrónicos rige según el fabricante.\n\n¡Muchas gracias por elegirnos!"
+    
+    texto_url = urllib.parse.quote(texto_wa)
