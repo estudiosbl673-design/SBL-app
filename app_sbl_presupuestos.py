@@ -187,8 +187,10 @@ if telefono_cliente:
     if not num_limpio.startswith("54"):
         num_limpio = "54" + num_limpio
     
-    whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
+        # ENLACE SEGURO COMPATIBLE CON WHATSAPP
+    whatsapp_url = f"https://whatsapp.com{num_limpio}&text={texto_url}"
     
-    st.markdown(f'<a href="{whatsapp_url}" target="_top" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
+    # BOTÓN NATIVO OFICIAL (Imposible de bloquear por el navegador)
+    st.link_button("💬 Enviar Resumen por WhatsApp", whatsapp_url, use_container_width=True)
 else:
     st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
