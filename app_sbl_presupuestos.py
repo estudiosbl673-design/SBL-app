@@ -1,6 +1,11 @@
 import streamlit as st
 import datetime
 import urllib.parse
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
 
 st.set_page_config(page_title="SBL Presupuestos Premium", page_icon="⚡", layout="centered")
 
@@ -61,16 +66,17 @@ otros_materiales = st.number_input("Otros materiales / Adicionales (Pesos $)", m
 st.sidebar.markdown("---")
 st.sidebar.header("🏦 Datos de Cobro")
 cbu_alias = st.sidebar.text_input("CBU / Alias Bancario", "SBL.SEGURIDAD.TUC")
+condicion_pago = st.sidebar.selectbox("Condición de Pago", ["Contado / Transferencia", "50% Anticipo - 50% Saldo", "A Convenir"])
 
 st.sidebar.markdown("---")
 st.sidebar.header("📲 Enviar por WhatsApp")
 telefono_cliente = st.sidebar.text_input("Celular del Cliente (Ej: 3816083885)", "")
 
-# Precios Unitarios
+# Precios Unitarios fijos
 P_BOCA, P_TERMICA, P_AIRE = 45000, 32000, 60000
 P_CAMARA, P_DVR, P_MANTENIMIENTO, P_METRO, P_KIT = 35000, 40000, 15000, 2000, 368000
 
-# Totales
+# Cálculos de Totales
 tot_electricidad = (c_bocas * P_BOCA) + (c_termicas * P_TERMICA) + (c_aires * P_AIRE)
 tot_seguridad = (c_camaras * P_CAMARA) + (c_dvr * P_DVR) + (c_mantenimiento * P_MANTENIMIENTO) + (c_metros * P_METRO)
 tot_materiales = (P_KIT if incluye_materiales else 0) + otros_materiales
@@ -84,42 +90,60 @@ st.write(f"**Total Materiales y Equipos:** ${tot_materiales:,}")
 st.markdown(f"### 🔥 **TOTAL A PRESUPUESTAR: ${total_general:,}**")
 st.markdown("---")
 
-# --- CONSTRUCCIÓN DEL MENSAJE TEXTO DETALLADO ---
-texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n" \
-           f" *Presupuesto Oficial N° {num_presupuesto}*\n" \
-           f"📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n" \
-           f"👤 *Cliente:* {cliente}\n" \
-           f"📍 *Obra:* {domicilio}\n" \
-           f"-----------------------------------------\n" \
-           f"*DESGLOSE DEL SERVICIO:* \n"
-
-if tot_electricidad > 0:
-    texto_wa += f"💡 *Mano de obra Eléctrica:* ${tot_electricidad:,}\n"
-if tot_seguridad > 0:
-    texto_wa += f"🛡️ *Mano de obra Seguridad y Manto.:* ${tot_seguridad:,}\n"
-if tot_materiales > 0:
-    texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
-
-texto_wa += f"-----------------------------------------\n" \
-            f"🔥 *TOTAL NETO CONTADO: ${total_general:,}*\n" \
-            f"-----------------------------------------\n" \
-            f"📝 *Términos Comerciales:*\n" \
-            f"• Pago: 50% anticipo, 50% al finalizar.\n" \
-            f"• Garantía: Equipos 1 año, Mano de obra 90 días.\n" \
-            f"🏦 *Datos de Transferencia:* \n" \
-            f"• CBU/Alias: {cbu_alias}\n\n" \
-            f"¡Muchas gracias por elegirnos!"
-
-texto_url = urllib.parse.quote(texto_wa)
-
-if telefono_cliente:
-    num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
-    if not num_limpio.startswith("54"): 
-        num_limpio = "54" + num_limpio
+# Lógica aislada para dibujar el PDF sin trabar la web
+def generar_pdf():
+    import io
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
+    styles = getSampleStyleSheet()
     
-    whatsapp_url = f"https://wa.me/{num_limpio}?text={texto_url}"
+    style_normal = ParagraphStyle('Normal', parent=styles['Normal'], fontSize=10, leading=14, textColor=colors.HexColor('#2C3E50'))
+    style_bold = ParagraphStyle('Bold', parent=style_normal, fontName='Helvetica-Bold')
+    style_title = ParagraphStyle('DocTitle', fontName='Helvetica-Bold', fontSize=22, leading=26, textColor=colors.HexColor('#1A365D'))
+    style_right_text = ParagraphStyle('RightText', parent=style_normal, alignment=2, fontSize=9, leading=13)
+    style_section_h = ParagraphStyle('SecH', fontName='Helvetica-Bold', fontSize=12, leading=16, textColor=colors.HexColor('#1A365D'), spaceBefore=12, spaceAfter=6)
     
-    st.success("✅ ¡Propuesta comercial generada de forma exitosa!")
-    st.markdown(f"👉 **[HACÉ CLIC AQUÍ PARA ENVIAR EL PRESUPUESTO POR WHATSAPP]({whatsapp_url})**")
-else:
-    st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
+    style_cell = ParagraphStyle('Cell', parent=style_normal, fontSize=9, leading=12)
+    style_cell_bold = ParagraphStyle('CellB', parent=style_bold, fontSize=9, leading=12)
+    style_cell_right = ParagraphStyle('CellR', parent=style_cell, alignment=2)
+    style_cell_right_bold = ParagraphStyle('CellRB', parent=style_bold, alignment=2)
+    
+    story = []
+    
+    header_data = [[Paragraph("<b>⚡ SBL SEGURIDAD INFORMÁTICA</b><br/><font size=9 color='#4A5568'>Soluciones Tecnológicas e Integrales</font>", style_title), Paragraph(f"<b>PRESUPUESTO OFICIAL</b><br/><b>N°:</b> {num_presupuesto}<br/><b>Fecha:</b> {fecha.strftime('%d/%m/%Y')}<br/><b>Validez:</b> 15 días", style_right_text)]]
+    t_header = Table(header_data, colWidths=[4.5 * inch, 3.0 * inch])
+    t_header.setStyle(TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP')]))
+    story.append(t_header)
+    story.append(Spacer(1, 10))
+    story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#1A365D'), spaceAfter=15))
+    
+    info_data = [[Paragraph("<b>PROVEEDOR:</b>", style_cell_bold), Paragraph("<b>CLIENTE / OBRA:</b>", style_cell_bold)], [Paragraph("SBL Seguridad Informática<br/>San Miguel de Tucumán<br/>Email: info@sblseguridad.com", style_cell), Paragraph(f"<b>Nombre:</b> {cliente}<br/><b>Ubicación:</b> {domicilio}<br/><b>Estado:</b> Pendiente de Aprobación", style_cell)]]
+    t_info = Table(info_data, colWidths=[3.75 * inch, 3.75 * inch])
+    t_info.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2D3748')), ('PADDING', (0,0), (-1,-1), 6), ('BACKGROUND', (0,1), (-1,1), colors.HexColor('#F7FAFC')), ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')), ('VALIGN', (0,0), (-1,-1), 'TOP')]))
+    story.append(t_info)
+    story.append(Spacer(1, 15))
+    
+    story.append(Paragraph("DESGLOSE DETALLADO DE CONCEPTOS", style_section_h))
+    th_style = ParagraphStyle('TH', parent=style_cell_bold, textColor=colors.whitesmoke)
+    th_style_r = ParagraphStyle('THR', parent=style_cell_right_bold, textColor=colors.whitesmoke)
+    items_table_data = [[Paragraph("Descripción del Ítem / Servicio Técnico", th_style), Paragraph("Cant.", th_style_r), Paragraph("P. Unitario", th_style_r), Paragraph("Subtotal", th_style_r)]]
+    
+    if c_bocas > 0:
+        items_table_data.append([Paragraph("Mano de obra: Instalación de Bocas Eléctricas Completas", style_cell), Paragraph(str(c_bocas), style_cell_right), Paragraph(f"${P_BOCA:,}", style_cell_right), Paragraph(f"${c_bocas*P_BOCA:,}", style_cell_right)])
+    if c_termicas > 0:
+        items_table_data.append([Paragraph("Mano de obra: Montaje y conexión de Térmicas/Disyuntores", style_cell), Paragraph(str(c_termicas), style_cell_right), Paragraph(f"${P_TERMICA:,}", style_cell_right), Paragraph(f"${c_termicas*P_TERMICA:,}", style_cell_right)])
+    if c_aires > 0:
+        items_table_data.append([Paragraph("Mano de obra: Tendido de líneas para Aire Acondicionado", style_cell), Paragraph(str(c_aires), style_cell_right), Paragraph(f"${P_AIRE:,}", style_cell_right), Paragraph(f"${c_aires*P_AIRE:,}", style_cell_right)])
+    if c_camaras > 0:
+        items_table_data.append([Paragraph("Mano de obra: Instalación y cableado de Cámaras Analógicas HD", style_cell), Paragraph(str(c_camaras), style_cell_right), Paragraph(f"${P_CAMARA:,}", style_cell_right), Paragraph(f"${c_camaras*P_CAMARA:,}", style_cell_right)])
+    if c_dvr > 0:
+        items_table_data.append([Paragraph("Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares", style_cell), Paragraph(str(c_dvr), style_cell_right), Paragraph(f"${P_DVR:,}", style_cell_right), Paragraph(f"${c_dvr*P_DVR:,}", style_cell_right)])
+    if c_mantenimiento > 0:
+        items_table_data.append([Paragraph("Servicio Técnico: Mantenimiento correctivo y limpieza de Cámaras", style_cell), Paragraph(str(c_mantenimiento), style_cell_right), Paragraph(f"${P_MANTENIMIENTO:,}", style_cell_right), Paragraph(f"${c_mantenimiento*P_MANTENIMIENTO:,}", style_cell_right)])
+    if c_metros > 0:
+        items_table_data.append([Paragraph("Materiales: Metros de cableado estructurado excedente CCTV", style_cell), Paragraph(str(c_metros), style_cell_right), Paragraph(f"${P_METRO:,}", style_cell_right), Paragraph(f"${c_metros*P_METRO:,}", style_cell_right)])
+    if incluye_materiales:
+        items_table_data.append([Paragraph("Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB", style_cell), Paragraph("1", style_cell_right), Paragraph(f"${P_KIT:,}", style_cell_right), Paragraph(f"${P_KIT:,}", style_cell_right)])
+    if otros_materiales > 0:
+        items_table_data.append([Paragraph("Materiales: Componentes adicionales o accesorios de montaje", style_cell), Paragraph("1", style_cell_right), Paragraph(f"${otros_materiales:,}", style_cell_right), Paragraph(f"${otros_materiales:,}", style_cell_right)])
+        
