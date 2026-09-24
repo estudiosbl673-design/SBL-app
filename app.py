@@ -110,7 +110,7 @@ def generar_pdf_desglosado():
     if c_dvr > 0: tabla_data.append([Paragraph("Mano de obra: Configuración de DVR / NVR + Enlace Celular", style_n), Paragraph(str(c_dvr), style_r), Paragraph(f"${c_dvr*P_DVR:,}", style_r)])
     if c_mantenimiento > 0: tabla_data.append([Paragraph("Mano de obra: Mantenimiento Técnico / Limpieza General", style_n), Paragraph(str(c_mantenimiento), style_r), Paragraph(f"${c_mantenimiento*P_MANTENIMIENTO:,}", style_r)])
     if incluye_materiales: tabla_data.append([Paragraph("Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB", style_n), Paragraph("1", style_r), Paragraph(f"${P_KIT:,}", style_r)])
-    if otros_materiales > 0: tabla_data.append([Paragraph("Equipamiento: Materiales o components adicionales", style_n), Paragraph("1", style_r), Paragraph(f"${otros_materiales:,}", style_r)])
+    if otros_materiales > 0: tabla_data.append([Paragraph("Equipamiento: Materiales o componentes adicionales", style_n), Paragraph("1", style_r), Paragraph(f"${otros_materiales:,}", style_r)])
     
     tabla_data.append([Paragraph("<b>TOTAL A PRESUPUESTAR</b>", style_n), Paragraph(""), Paragraph(f"<b>${total_general:,}</b>", style_r)])
     
@@ -146,16 +146,14 @@ except Exception as e:
 st.markdown("---")
 st.subheader("📲 Panel de Envío por WhatsApp")
 
-# Se agregaron los espaciados visuales fijos en la zona marcada
-st.write("Complete el número telefónico del cliente abajo para habilitar el envío automático de la propuesta técnica comercial.")
-
+# Casilla de texto estándar
 telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos, Ej: 543816083885)", "543816083885")
 
-texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
-if tot_mano_obra > 0: texto_wa += f"💡 *Mano de obra:* ${tot_mano_obra:,}\n"
-if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
-texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n⏳ *Validez del presupuesto:* 10 días.\n🛡️ *Garantía:* Cobertura de 90 días exclusiva para la mano de obra. La garantía por materiales o dispositivos electrónicos rige según el fabricante.\n\n¡Muchas gracias por elegirnos!"
-
-texto_url = urllib.parse.quote(texto_wa)
-
-num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
+# BOTÓN DE COMANDO NATIVO ESTÁNDAR (Ningún AdBlock ni Chrome lo puede borrar o bloquear)
+if st.button("💬 ENVIAR PRESUPUESTO POR WHATSAPP NOW", use_container_width=True):
+    texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
+    if tot_mano_obra > 0: texto_wa += f"💡 *Mano de obra:* ${tot_mano_obra:,}\n"
+    if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
+    texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n⏳ *Validez del presupuesto:* 10 días.\n🛡️ *Garantía:* Cobertura de 90 días exclusiva para la mano de obra. La garantía por materiales o dispositivos electrónicos rige según el fabricante.\n\n¡Muchas gracias por elegirnos!"
+    
+    texto_url = urllib.parse.quote(texto_wa)
