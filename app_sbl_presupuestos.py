@@ -115,7 +115,7 @@ def generar_pdf_desglosado():
     tabla_data.append([Paragraph("<b>TOTAL A PRESUPUESTAR</b>", style_n), Paragraph(""), Paragraph(f"<b>${total_general:,}</b>", style_r)])
     
     t_d = Table(tabla_data, colWidths=[4.5 * inch, 1.0 * inch, 2.0 * inch])
-    t_d.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E3D59')), ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke), ('PADDING', (0,0), (-1,-1), 8), ('GRID', (0,0), (-1,-2), 0.5, colors.lightgrey), ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#E8F1F5'))]))
+    t_d.setStyle(TableStyle([('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E3D59')), ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke), ('PADDING', (0,0), (-1,-1), 10), ('GRID', (0,0), (-1,-2), 0.5, colors.lightgrey), ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#E8F1F5'))]))
     story.append(t_d)
     story.append(Spacer(1, 20))
     
@@ -146,7 +146,6 @@ except Exception as e:
 st.markdown("---")
 st.subheader("📲 Panel de Envío por WhatsApp")
 
-# CASILLA DE TELÉFONO MOVIDA AL CENTRO DE LA PANTALLA PRINCIPAL ABAJO DEL PDF
 telefono_cliente = st.text_input("Celular del Cliente (Escribir números seguidos con código de área, Ej: 543816083885)", "543816083885")
 
 texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
@@ -159,4 +158,6 @@ texto_url = urllib.parse.quote(texto_wa)
 num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
 if not num_limpio.startswith("54"):
     num_limpio = "54" + num_limpio
+
+whatsapp_url = f"https://wa.me/{num_limpio}?text={texto_url}"
 
