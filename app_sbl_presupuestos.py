@@ -173,6 +173,8 @@ st.download_button(
     mime="application/pdf"
 )
 
+# ... (deja todo lo de arriba del PDF exactamente igual)
+
 texto_wa = f"*⚡ SBL Seguridad Informática*\n" \
            f"Hola {cliente}, te adjuntamos el resumen del *Presupuesto N° {num_presupuesto}*.\n\n" \
            f"💡 Mano de Obra Eléctrica: ${tot_electricidad:,}\n" \
@@ -184,11 +186,14 @@ texto_wa = f"*⚡ SBL Seguridad Informática*\n" \
 texto_url = urllib.parse.quote(texto_wa)
 
 if telefono_cliente:
-    num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "")
+    num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "").replace("(", "").replace(")", "")
     if not num_limpio.startswith("54"):
         num_limpio = "54" + num_limpio
     
     whatsapp_url = f"https://whatsapp.com{num_limpio}&text={texto_url}"
-    st.link_button("💬 Enviar Resumen por WhatsApp", whatsapp_url)
+    
+    # NUEVO MÉTODO SEGURO: Enlace directo en Markdown que salta los bloqueos del navegador
+    st.markdown(f'<a href="{whatsapp_url}" target="_blank" style="text-decoration: none;"><button style="background-color: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">💬 Enviar Resumen por WhatsApp</button></a>', unsafe_allow_html=True)
 else:
     st.info("💡 Ingresá el celular del cliente en el panel izquierdo para habilitar el botón de envío directo por WhatsApp.")
+
