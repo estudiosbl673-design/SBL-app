@@ -159,5 +159,5 @@ num_limpio = telefono_cliente.replace("+", "").replace("-", "").replace(" ", "")
 if not num_limpio.startswith("54"):
     num_limpio = "54" + num_limpio
 
-whatsapp_url = f"https://wa.me{num_limpio}?text={texto_url}"
+whatsapp_url = f"https://wa.me/{num_limpio}?text={texto_url}"
 
