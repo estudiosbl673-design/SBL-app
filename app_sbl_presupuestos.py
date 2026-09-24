@@ -112,11 +112,8 @@ def generar_pdf():
     style_normal = ParagraphStyle('Normal', parent=styles['Normal'], fontSize=10, leading=14, textColor=colors.HexColor('#2C3E50'))
     style_bold = ParagraphStyle('Bold', parent=style_normal, fontName='Helvetica-Bold')
     
-    # Estilos de encabezados profesionales
     style_title = ParagraphStyle('DocTitle', fontName='Helvetica-Bold', fontSize=22, leading=26, textColor=colors.HexColor('#1A365D'))
-    style_subtitle = ParagraphStyle('DocSub', fontName='Helvetica', fontSize=10, leading=14, textColor=colors.HexColor('#718096'))
     style_right_text = ParagraphStyle('RightText', parent=style_normal, alignment=2, fontSize=9, leading=13)
-    
     style_section_h = ParagraphStyle('SecH', fontName='Helvetica-Bold', fontSize=12, leading=16, textColor=colors.HexColor('#1A365D'), spaceBefore=12, spaceAfter=6)
     
     style_cell = ParagraphStyle('Cell', parent=style_normal, fontSize=9, leading=12)
@@ -126,7 +123,6 @@ def generar_pdf():
     
     story = []
     
-    # --- BLOQUE DE ENCABEZADO CORPORATIVO ---
     header_data = [
         [
             Paragraph("<b>⚡ SBL SEGURIDAD INFORMÁTICA</b><br/><font size=9 color='#4A5568'>Soluciones Tecnológicas e Integrales</font>", style_title),
@@ -136,53 +132,38 @@ def generar_pdf():
                       "<b>Validez:</b> 15 días", style_right_text)
         ]
     ]
-    t_header = Table(header_data, colWidths=[340, 200])
+    t_header = Table(header_data, colWidths=[330, 210])
     t_header.setStyle(TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP')]))
     story.append(t_header)
     
     story.append(Spacer(1, 10))
     story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor('#1A365D'), spaceAfter=15))
     
-    # --- DATOS DE EMISOR Y CLIENTE ---
     info_data = [
-        [
-            Paragraph("<b>PROVEEDOR:</b>", style_cell_bold),
-            Paragraph("<b>CLIENTE / OBRA:</b>", style_cell_bold)
-        ],
-        [
-            Paragraph("SBL Seguridad Informática<br/>San Miguel de Tucumán<br/>Email: info@sblseguridad.com", style_cell),
-            Paragraph(f"<b>Nombre:</b> {cliente}<br/><b>Ubicación:</b> {domicilio}<br/><b>Estado:</b> Pendiente de Aprobación", style_cell)
-        ]
+        [Paragraph("<b>PROVEEDOR:</b>", style_cell_bold), Paragraph("<b>CLIENTE / OBRA:</b>", style_cell_bold)],
+        [Paragraph("SBL Seguridad Informática<br/>San Miguel de Tucumán<br/>Email: info@sblseguridad.com", style_cell),
+         Paragraph(f"<b>Nombre:</b> {cliente}<br/><b>Ubicación:</b> {domicilio}<br/><b>Estado:</b> Pendiente de Aprobación", style_cell)]
     ]
     t_info = Table(info_data, colWidths=[270, 270])
     t_info.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2D3748')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
         ('PADDING', (0,0), (-1,-1), 6),
         ('BACKGROUND', (0,1), (-1,1), colors.HexColor('#F7FAFC')),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
         ('VALIGN', (0,0), (-1,-1), 'TOP')
     ]))
-    # Forzar el texto blanco en el mini encabezado de la tabla informativa
-    info_data[0][0].style.textColor = colors.whitesmoke
-    info_data[0][1].style.textColor = colors.whitesmoke
     story.append(t_info)
     
     story.append(Spacer(1, 15))
     story.append(Paragraph("DESGLOSE DETALLADO DE CONCEPTOS", style_section_h))
     
-    # --- TABLA DE ITEMS TOTALMENTE DESGLOSADA ---
     th_style = ParagraphStyle('TH', parent=style_cell_bold, textColor=colors.whitesmoke)
     th_style_r = ParagraphStyle('THR', parent=style_cell_right_bold, textColor=colors.whitesmoke)
     
     items_table_data = [
-        [Paragraph("Descripción del Ítem / Servicio Técnico", th_style), 
-         Paragraph("Cant.", th_style_r), 
-         Paragraph("P. Unitario", th_style_r), 
-         Paragraph("Subtotal", th_style_r)]
+        [Paragraph("Descripción del Ítem / Servicio Técnico", th_style), Paragraph("Cant.", th_style_r), Paragraph("P. Unitario", th_style_r), Paragraph("Subtotal", th_style_r)]
     ]
     
-    # Agregar líneas dinámicas solo de lo presupuestado
     if c_bocas > 0:
         items_table_data.append([Paragraph("Mano de obra: Instalación de Bocas Eléctricas Completas", style_cell), Paragraph(str(c_bocas), style_cell_right), Paragraph(f"${P_BOCA:,}", style_cell_right), Paragraph(f"${c_bocas*P_BOCA:,}", style_cell_right)])
     if c_termicas > 0:
@@ -196,3 +177,9 @@ def generar_pdf():
     if c_metros > 0:
         items_table_data.append([Paragraph("Materiales: Metros de cableado estructurado/excedente de CCTV", style_cell), Paragraph(str(c_metros), style_cell_right), Paragraph(f"${P_METRO:,}", style_cell_right), Paragraph(f"${c_metros*P_METRO:,}", style_cell_right)])
     if incluye_materiales:
+        items_table_data.append([Paragraph("Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB", style_cell), Paragraph("1", style_cell_right), Paragraph(f"${P_KIT:,}", style_cell_right), Paragraph(f"${P_KIT:,}", style_cell_right)])
+    if otros_materiales > 0:
+        items_table_data.append([Paragraph("Materiales: Componentes adicionales, cajas estancas o accesorios de montaje", style_cell), Paragraph("1", style_cell_right), Paragraph(f"${otros_materiales:,}", style_cell_right), Paragraph(f"${otros_materiales:,}", style_cell_right)])
+        
+    items_table_data.append([Paragraph("<b>VALOR TOTAL DEL PRESUPUESTO CONTADO</b>", style_cell_bold), Paragraph(""), Paragraph(""), Paragraph(f"<b>${total_general:,}</b>", style_cell_right_bold)])
+    
