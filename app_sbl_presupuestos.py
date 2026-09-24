@@ -115,14 +115,13 @@ def generar_pdf_desglosado():
     story.append(t_c)
     story.append(Spacer(1, 15))
     
-    # Tabla Detallada Ítem por Ítem
     tabla_data = [[Paragraph("<b>Descripción del Trabajo / Materiales</b>", style_n), Paragraph("<b>Cant.</b>", style_r), Paragraph("<b>Subtotal</b>", style_r)]]
     
     if c_bocas > 0: tabla_data.append([Paragraph("Mano de obra: Instalación de Bocas Eléctricas Completas", style_n), Paragraph(str(c_bocas), style_r), Paragraph(f"${c_bocas*P_BOCA:,}", style_r)])
     if c_tomas > 0: tabla_data.append([Paragraph("Mano de obra: Colocación de Tomas / Módulos", style_n), Paragraph(str(c_tomas), style_r), Paragraph(f"${c_tomas*P_TOMA:,}", style_r)])
     if c_termicas > 0: tabla_data.append([Paragraph("Mano de obra: Colocación de Térmicas / Disyuntores", style_n), Paragraph(str(c_termicas), style_r), Paragraph(f"${c_termicas*P_TERMICA:,}", style_r)])
     if c_camaras > 0: tabla_data.append([Paragraph("Mano de obra: Montaje de Cámaras de Seguridad", style_n), Paragraph(str(c_camaras), style_r), Paragraph(f"${c_camaras*P_CAMARA:,}", style_r)])
-    if c_cableado > 0: tabla_data.append([Paragraph("Mano de obra: Tendido de Cableado de Cámaras", style_cell=style_n), Paragraph(str(c_cableado), style_r), Paragraph(f"${c_cableado*P_CABLEADO:,}", style_r)])
+    if c_cableado > 0: tabla_data.append([Paragraph("Mano de obra: Tendido de Cableado de Cámaras", style_n), Paragraph(str(c_cableado), style_r), Paragraph(f"${c_cableado*P_CABLEADO:,}", style_r)])
     if c_caneria > 0: tabla_data.append([Paragraph("Mano de obra: Instalación de Cañerías / Conducción", style_n), Paragraph(str(c_caneria), style_r), Paragraph(f"${c_caneria*P_CANERIA:,}", style_r)])
     if c_dvr > 0: tabla_data.append([Paragraph("Mano de obra: Configuración de DVR / NVR + Enlace Celular", style_n), Paragraph(str(c_dvr), style_r), Paragraph(f"${c_dvr*P_DVR:,}", style_r)])
     if c_mantenimiento > 0: tabla_data.append([Paragraph("Mano de obra: Mantenimiento Técnico / Limpieza General", style_n), Paragraph(str(c_mantenimiento), style_r), Paragraph(f"${c_mantenimiento*P_MANTENIMIENTO:,}", style_r)])
@@ -163,19 +162,11 @@ except Exception as e:
 st.markdown("---")
 st.subheader("📲 Panel de Envío por WhatsApp")
 
-# Armado del mensaje limpio solicitado para WhatsApp
-texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n" \
-           f" *Presupuesto Oficial N° {num_presupuesto}*\n" \
-           f"📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n" \
-           f"👤 *Cliente:* {cliente}\n" \
-           f"📍 *Obra:* {domicilio}\n" \
-           f"-----------------------------------------\n" \
-           f"*DESGLOSE DEL SERVICIO:* \n"
-
+# Variable unificada lineal (Inmune a fallas de sangría o corte)
+texto_wa = f"*⚡ SBL SEGURIDAD INFORMÁTICA *\n *Presupuesto Oficial N° {num_presupuesto}*\n📅 *Fecha:* {fecha.strftime('%d/%m/%Y')}\n👤 *Cliente:* {cliente}\n📍 *Obra:* {domicilio}\n-----------------------------------------\n*DESGLOSE DEL SERVICIO:* \n"
 if tot_mano_obra > 0: texto_wa += f"💡 *Mano de obra:* ${tot_mano_obra:,}\n"
 if tot_materiales > 0: texto_wa += f"📦 *Materiales y Equipos:* ${tot_materiales:,}\n"
+texto_wa += f"-----------------------------------------\n🔥 *TOTAL NETO: ${total_general:,}*\n-----------------------------------------\n⏳ *Validez del presupuesto:* 10 días.\n🛡️ *Garantía:* Cobertura de 90 días exclusiva para la mano de obra. La garantía por materiales o dispositivos electrónicos rige según el fabricante.\n\n¡Muchas gracias por elegirnos!"
 
-texto_wa += f"-----------------------------------------\n" \
-            f"🔥 *TOTAL NETO: ${total_general:,}*\n" \
-            f"-----------------------------------------\n" \
-            f"⏳ *Validez del presupuesto:* 10 días.\n" \
+texto_url = urllib.parse.quote(texto_wa)
+
