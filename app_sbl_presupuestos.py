@@ -58,10 +58,11 @@ c_bocas = st.number_input("Cantidad de Bocas Completas ($45.000 c/u)", min_value
 c_termicas = st.number_input("Instalación de Térmicas/Disyuntores ($32.000 c/u)", min_value=0, value=0)
 c_aires = st.number_input("Líneas Exclusivas para A/A ($60.000 c/u)", min_value=0, value=0)
 
-# Categoría 2: Cámaras
-st.subheader("🛡️ 2. Seguridad y CCTV")
+# Categoría 2: Cámaras y Mantenimiento
+st.subheader("🛡️ 2. Seguridad, CCTV y Mantenimiento")
 c_camaras = st.number_input("Instalación y Cableado de Cámaras Analógicas ($35.000 c/u)", min_value=0, value=4)
 c_dvr = st.number_input("Configuración de DVR/NVR + Celulares ($40.000 c/u)", min_value=0, value=1)
+c_mantenimiento = st.number_input("Mantenimiento Técnico / Limpieza de Cámaras ($15.000 c/u)", min_value=0, value=0)
 c_metros = st.number_input("Metros de cableado excedente ($2.000 por metro)", min_value=0, value=0)
 
 # Categoría 3: Materiales
@@ -85,19 +86,20 @@ P_TERMICA = 32000
 P_AIRE = 60000
 P_CAMARA = 35000
 P_DVR = 40000
+P_MANTENIMIENTO = 15000
 P_METRO = 2000
 P_KIT = 368000
 
 # Cálculos de Totales
 tot_electricidad = (c_bocas * P_BOCA) + (c_termicas * P_TERMICA) + (c_aires * P_AIRE)
-tot_seguridad = (c_camaras * P_CAMARA) + (c_dvr * P_DVR) + (c_metros * P_METRO)
+tot_seguridad = (c_camaras * P_CAMARA) + (c_dvr * P_DVR) + (c_mantenimiento * P_MANTENIMIENTO) + (c_metros * P_METRO)
 tot_materiales = (P_KIT if incluye_materiales else 0) + otros_materiales
 total_general = tot_electricidad + tot_seguridad + tot_materiales
 
 st.markdown("---")
 st.header("💰 Resumen del Presupuesto")
 st.write(f"**Total Electricidad (Mano de Obra):** ${tot_electricidad:,}")
-st.write(f"**Total Seguridad (Mano de Obra):** ${tot_seguridad:,}")
+st.write(f"**Total Seguridad y Mantenimiento:** ${tot_seguridad:,}")
 st.write(f"**Total Materiales y Equipos:** ${tot_materiales:,}")
 st.markdown(f"### 🔥 **TOTAL A PRESUPUESTAR: ${total_general:,}**")
 
@@ -132,7 +134,7 @@ def generar_pdf():
                       "<b>Validez:</b> 15 días", style_right_text)
         ]
     ]
-    t_header = Table(header_data, colWidths=[330, 210])
+    t_header = Table(header_data, colWidths=[340, 200])
     t_header.setStyle(TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP')]))
     story.append(t_header)
     
@@ -174,12 +176,8 @@ def generar_pdf():
         items_table_data.append([Paragraph("Mano de obra: Instalación, montaje y cableado de Cámaras Analógicas HD", style_cell), Paragraph(str(c_camaras), style_cell_right), Paragraph(f"${P_CAMARA:,}", style_cell_right), Paragraph(f"${c_camaras*P_CAMARA:,}", style_cell_right)])
     if c_dvr > 0:
         items_table_data.append([Paragraph("Servicio Técnico: Configuración de DVR/NVR + Enlace a celulares en red", style_cell), Paragraph(str(c_dvr), style_cell_right), Paragraph(f"${P_DVR:,}", style_cell_right), Paragraph(f"${c_dvr*P_DVR:,}", style_cell_right)])
+    if c_mantenimiento > 0:
+        items_table_data.append([Paragraph("Servicio Técnico: Mantenimiento correctivo, limpieza de lentes y calibración de Cámaras", style_cell), Paragraph(str(c_mantenimiento), style_cell_right), Paragraph(f"${P_MANTENIMIENTO:,}", style_cell_right), Paragraph(f"${c_mantenimiento*P_MANTENIMIENTO:,}", style_cell_right)])
     if c_metros > 0:
         items_table_data.append([Paragraph("Materiales: Metros de cableado estructurado/excedente de CCTV", style_cell), Paragraph(str(c_metros), style_cell_right), Paragraph(f"${P_METRO:,}", style_cell_right), Paragraph(f"${c_metros*P_METRO:,}", style_cell_right)])
     if incluye_materiales:
-        items_table_data.append([Paragraph("Equipamiento: Kit completo de 4 Cámaras HD + Disco Rígido 1TB", style_cell), Paragraph("1", style_cell_right), Paragraph(f"${P_KIT:,}", style_cell_right), Paragraph(f"${P_KIT:,}", style_cell_right)])
-    if otros_materiales > 0:
-        items_table_data.append([Paragraph("Materiales: Componentes adicionales, cajas estancas o accesorios de montaje", style_cell), Paragraph("1", style_cell_right), Paragraph(f"${otros_materiales:,}", style_cell_right), Paragraph(f"${otros_materiales:,}", style_cell_right)])
-        
-    items_table_data.append([Paragraph("<b>VALOR TOTAL DEL PRESUPUESTO CONTADO</b>", style_cell_bold), Paragraph(""), Paragraph(""), Paragraph(f"<b>${total_general:,}</b>", style_cell_right_bold)])
-    
